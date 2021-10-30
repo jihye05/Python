@@ -1,7 +1,13 @@
 import random   # 파이썬에서 제공하는 random 모듈
+from datetime import datetime
 
 score = []  # 게임 성적 저장할 리스트
 while True: # 사용자가 끝내기 전까지 게임 무한 반복
+    f = open('gamescore.txt', 'r') # 게임 종료하고 다시 시작할 때 파일 저장된 기록 불러오는부분
+    while True:  # 반복문으로 파일 내용 읽고 종료하기
+        line = f.readline()
+        if not line: break
+        print(line)
     print("UP & DOWN 게임에 오신걸 환영합니다~")
     print("1.게임시작 2.기록보기 3.종료하기")
     print(">>", end="")
@@ -29,14 +35,14 @@ while True: # 사용자가 끝내기 전까지 게임 무한 반복
                 else:
                     print("정답입니다!!")  # 정답 출력
                     print(count, "번째만에 맞추셨습니다.\n")  # 몇회만에 맞췄는지 출력
-                    score.append(count)  # score리스트에 성공횟수 저장
+                    score.append(count)  # score리스트에 성공횟수 저장 -> 최고기록일때만 추가되게 수정해야되는디
                     max = score[0]  # 리스트의 제일 앞에 값을 max로 설정
 
                     for s in range(1, len(score)):  # max값보다 적은 횟수의 score가 나오면 최고기록경신 출력
                         if max > score[s]:
                             max = score[s]
                             print("최고기록경신~!!")  # 피드백 3. 최고기록일때 기록 추가
-                            date = input("날짜를 입력해주세요")  # 최고기록 갱신시 날짜, 닉네임, 최고기록 저장
+                            date = datetime.today().strftime("%Y%m%d")  # 최고기록 갱신시 날짜, 닉네임, 최고기록 저장
                             nickname = input("닉네임을 입력해주세요")
                             f = open('gamescore.txt', 'a')
                             f.write(str(max) + ' ' + date + nickname)  # 최고기록 날짜 닉네임 순으로 저장
@@ -50,9 +56,14 @@ while True: # 사용자가 끝내기 전까지 게임 무한 반복
 
         elif menu == 2: # 2.기록보기 눌렸을 경우
             score.sort()    # score 정렬
-            for rank, value in enumerate(score, start=1):   # 등수 점수 순으로 나오도록 출력, 시작값은 0이아닌 1등으로 설정
-                print(rank, value)
-            break
+            # for rank, value in enumerate(score, start=1):   # 등수 점수 순으로 나오도록 출력, 시작값은 0이아닌 1등으로 설정
+            #     print(date, nickname, rank, value)  # 날짜 닉네임 기록 보이게 설정
+            # break
+            line = f.readline()
+            if not line: break
+            print(line)
+
+
 
         elif menu == 3:
             print("종료하겠습니다.")
@@ -66,6 +77,4 @@ while True: # 사용자가 끝내기 전까지 게임 무한 반복
         else:   # 피드백 4. 메뉴에 해당하지 않는 숫자 누른 경우
             print("1~3에서 메뉴 선택해주세요")
             break
-
-
-# 피드백 5번 처음 답을 맞추는 경우에는 기록이 없어서 무조건 최고기록 멘트가 출력되어야 하는 것 더 실습해보고 추가하겠습니다.
+# 처음 답을 맞추는 경우에 최고기록 멘트 출력
